@@ -1,0 +1,4 @@
+flask==3.1.0
+g4f==0.4.6.1
+markdown==3.5.2
+python-dotenv==1.0.1 

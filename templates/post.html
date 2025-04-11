@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post['title'] }} - AI Tech Blog{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Additional styles specifically for post content */
+    .markdown-content {
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        word-break: break-word;
+        hyphens: auto;
+    }
+    
+    @media (max-width: 768px) {
+        .post-content {
+            padding: 15px;
+        }
+        .post-content h1 {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ post['title'] }}</li>
+            </ol>
+        </nav>
+        
+        <article class="post-content mb-5">
+            <header class="mb-4">
+                <h1>{{ post['title'] }}</h1>
+                <div class="text-muted">
+                    <i class="fas fa-calendar-alt me-2"></i>Published on {{ post['created_at'].split(' ')[0] }}
+                </div>
+            </header>
+            
+            <div class="markdown-content">
+                {{ content_html|safe }}
+            </div>
+        </article>
+        
+        <div class="d-flex justify-content-between mb-5">
+            <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Posts
+            </a>
+            <a href="{{ url_for('new_post') }}" class="btn btn-success">
+                <i class="fas fa-plus-circle me-2"></i>Create New Post
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add syntax highlighting for code blocks
+    document.addEventListener('DOMContentLoaded', function() {
+        const codeBlocks = document.querySelectorAll('pre code');
+        if (codeBlocks.length > 0) {
+            // Add highlight.js if needed
+            const highlightLink = document.createElement('link');
+            highlightLink.rel = 'stylesheet';
+            highlightLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css';
+            document.head.appendChild(highlightLink);
+            
+            const highlightScript = document.createElement('script');
+            highlightScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js';
+            highlightScript.onload = function() {
+                hljs.highlightAll();
+            };
+            document.body.appendChild(highlightScript);
+        }
+    });
+</script>
+{% endblock %} 

@@ -1,0 +1,43 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Database
+*.db
+*.sqlite3
+
+# Environment variables
+.env
+
+# Flask instance folder
+instance/
+
+# Logs
+*.log
+
+# Local development settings
+.DS_Store
+.idea/
+.vscode/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db 
+
+har_and_cookies/

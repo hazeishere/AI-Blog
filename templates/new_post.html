@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Create New Post - AI Tech Blog{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Create New Blog Post</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('new_post') }}">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Blog Post Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required
+                               placeholder="Enter an interesting technology topic...">
+                        <div class="form-text">
+                            Enter a title about any technology topic, and AI will generate the content.
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>How it works:</strong> Our AI will generate a detailed blog post based on your title. 
+                        This may take a few seconds to complete.
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-robot me-2"></i>Generate Blog Post
+                        </button>
+                        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <h5>Sample Title Ideas:</h5>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a href="javascript:void(0)" class="sample-title">The Future of Quantum Computing</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="javascript:void(0)" class="sample-title">How AI is Transforming Healthcare</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="javascript:void(0)" class="sample-title">Web3 and the Evolution of the Internet</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="javascript:void(0)" class="sample-title">Cybersecurity Trends for 2023</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="javascript:void(0)" class="sample-title">Machine Learning in Autonomous Vehicles</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add click handler for sample titles
+    document.addEventListener('DOMContentLoaded', function() {
+        const sampleTitles = document.querySelectorAll('.sample-title');
+        const titleInput = document.getElementById('title');
+        
+        sampleTitles.forEach(function(element) {
+            element.addEventListener('click', function() {
+                titleInput.value = this.textContent;
+                titleInput.focus();
+            });
+        });
+    });
+</script>
+{% endblock %} 
