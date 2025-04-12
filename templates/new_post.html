@@ -7,15 +7,20 @@
     <div class="col-md-8">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Create New Blog Post</h4>
+                <h4 class="mb-0">
+                    <i class="fas fa-pen me-2"></i>Create New Blog Post
+                </h4>
             </div>
             <div class="card-body">
                 <form method="POST" action="{{ url_for('new_post') }}">
                     <div class="mb-3">
-                        <label for="title" class="form-label">Blog Post Title</label>
+                        <label for="title" class="form-label">
+                            <i class="fas fa-heading me-2"></i>Blog Post Title
+                        </label>
                         <input type="text" class="form-control" id="title" name="title" required
                                placeholder="Enter an interesting technology topic...">
                         <div class="form-text">
+                            <i class="fas fa-info-circle me-2"></i>
                             Enter a title about any technology topic, and AI will generate the content.
                         </div>
                     </div>
@@ -30,29 +35,41 @@
                         <button type="submit" class="btn btn-primary btn-lg">
                             <i class="fas fa-robot me-2"></i>Generate Blog Post
                         </button>
-                        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Cancel</a>
+                        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Cancel
+                        </a>
                     </div>
                 </form>
             </div>
         </div>
         
         <div class="mt-4">
-            <h5>Sample Title Ideas:</h5>
-            <ul class="list-group">
+            <h5><i class="fas fa-lightbulb me-2"></i>Sample Title Ideas:</h5>
+            <ul class="list-group sample-titles">
                 <li class="list-group-item">
-                    <a href="javascript:void(0)" class="sample-title">The Future of Quantum Computing</a>
+                    <a href="javascript:void(0)" class="sample-title">
+                        <i class="fas fa-microchip me-2"></i>The Future of Quantum Computing
+                    </a>
                 </li>
                 <li class="list-group-item">
-                    <a href="javascript:void(0)" class="sample-title">How AI is Transforming Healthcare</a>
+                    <a href="javascript:void(0)" class="sample-title">
+                        <i class="fas fa-heartbeat me-2"></i>How AI is Transforming Healthcare
+                    </a>
                 </li>
                 <li class="list-group-item">
-                    <a href="javascript:void(0)" class="sample-title">Web3 and the Evolution of the Internet</a>
+                    <a href="javascript:void(0)" class="sample-title">
+                        <i class="fas fa-globe me-2"></i>Web3 and the Evolution of the Internet
+                    </a>
                 </li>
                 <li class="list-group-item">
-                    <a href="javascript:void(0)" class="sample-title">Cybersecurity Trends for 2023</a>
+                    <a href="javascript:void(0)" class="sample-title">
+                        <i class="fas fa-shield-alt me-2"></i>Cybersecurity Trends for 2023
+                    </a>
                 </li>
                 <li class="list-group-item">
-                    <a href="javascript:void(0)" class="sample-title">Machine Learning in Autonomous Vehicles</a>
+                    <a href="javascript:void(0)" class="sample-title">
+                        <i class="fas fa-car me-2"></i>Machine Learning in Autonomous Vehicles
+                    </a>
                 </li>
             </ul>
         </div>
@@ -62,17 +79,99 @@
 
 {% block scripts %}
 <script>
-    // Add click handler for sample titles
     document.addEventListener('DOMContentLoaded', function() {
+        // Add click handler for sample titles
         const sampleTitles = document.querySelectorAll('.sample-title');
         const titleInput = document.getElementById('title');
         
         sampleTitles.forEach(function(element) {
+            // Add hover effect
+            element.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(10px)';
+                this.style.color = '#007bff';
+            });
+            
+            element.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+                this.style.color = '';
+            });
+            
+            // Add click handler
             element.addEventListener('click', function() {
-                titleInput.value = this.textContent;
+                titleInput.value = this.textContent.trim();
                 titleInput.focus();
+                
+                // Add a subtle flash effect to the input
+                titleInput.style.backgroundColor = '#e9ecef';
+                setTimeout(() => {
+                    titleInput.style.backgroundColor = '';
+                }, 300);
             });
         });
+        
+        // Add animation to form elements
+        const formElements = document.querySelectorAll('.form-label, .form-control, .form-text, .alert, .btn');
+        formElements.forEach((el, index) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                el.style.transition = 'all 0.5s ease';
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }, 100 * index);
+        });
+        
+        // Add typing effect to placeholder
+        const placeholders = [
+            'Enter an interesting technology topic...',
+            'What tech topic interests you?',
+            'Share your tech curiosity...',
+            'What should we explore today?'
+        ];
+        let currentPlaceholder = 0;
+        
+        setInterval(() => {
+            titleInput.placeholder = placeholders[currentPlaceholder];
+            currentPlaceholder = (currentPlaceholder + 1) % placeholders.length;
+        }, 3000);
     });
 </script>
-{% endblock %} 
+
+<style>
+    .sample-title {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        padding: 0.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .list-group-item {
+        border-left: 3px solid transparent;
+        transition: all 0.3s ease;
+    }
+    
+    .list-group-item:hover {
+        border-left-color: #007bff;
+        background-color: #f8f9fa;
+    }
+    
+    .form-control {
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        transform: translateY(-2px);
+    }
+    
+    .btn {
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}

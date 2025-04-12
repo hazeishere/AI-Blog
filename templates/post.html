@@ -4,12 +4,47 @@
 
 {% block extra_head %}
 <style>
-    /* Additional styles specifically for post content */
+    /* Base styles with smooth transitions */
     .markdown-content {
         overflow-wrap: break-word;
         word-wrap: break-word;
         word-break: break-word;
         hyphens: auto;
+        transition: all 0.3s ease;
+    }
+    
+    .post-content {
+        padding: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .post-content h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .post-content h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .post-content p {
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    /* Hover effects */
+    .post-content h1:hover {
+        transform: translateY(-2px);
+        color: #2c3e50;
+    }
+    
+    .post-content h2:hover {
+        transform: translateY(-2px);
+        color: #34495e;
     }
     
     @media (max-width: 768px) {
@@ -60,23 +95,64 @@
 
 {% block scripts %}
 <script>
-    // Add syntax highlighting for code blocks
-    document.addEventListener('DOMContentLoaded', function() {
-        const codeBlocks = document.querySelectorAll('pre code');
-        if (codeBlocks.length > 0) {
-            // Add highlight.js if needed
-            const highlightLink = document.createElement('link');
-            highlightLink.rel = 'stylesheet';
-            highlightLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css';
-            document.head.appendChild(highlightLink);
-            
-            const highlightScript = document.createElement('script');
-            highlightScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js';
-            highlightScript.onload = function() {
-                hljs.highlightAll();
-            };
-            document.body.appendChild(highlightScript);
-        }
+document.addEventListener('DOMContentLoaded', function() {
+    // Add fade-in animation on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, {
+        threshold: 0.1
     });
+
+    // Apply to all headings and paragraphs
+    document.querySelectorAll('.post-content h1, .post-content h2, .post-content p').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'all 0.6s ease-out';
+        observer.observe(el);
+    });
+
+    // Add dynamic color changing effect on headings
+    document.querySelectorAll('.post-content h1, .post-content h2').forEach(heading => {
+        heading.addEventListener('mousemove', function(e) {
+            const x = e.clientX - this.getBoundingClientRect().left;
+            const y = e.clientY - this.getBoundingClientRect().top;
+            
+            this.style.background = `
+                radial-gradient(
+                    circle at ${x}px ${y}px,
+                    rgba(50, 50, 50, 0.2) 0%,
+                    transparent 40%
+                )
+            `;
+        });
+    });
+
+    // Responsive adjustments
+    function adjustResponsiveStyles() {
+        const width = window.innerWidth;
+        if (width <= 768) {
+            document.querySelector('.post-content').style.padding = '15px';
+            document.querySelectorAll('.post-content h1').forEach(h1 => {
+                h1.style.fontSize = '1.8rem';
+            });
+        } else {
+            document.querySelector('.post-content').style.padding = '20px';
+            document.querySelectorAll('.post-content h1').forEach(h1 => {
+                h1.style.fontSize = '2.5rem';
+            });
+        }
+    }
+
+    // Initial adjustment
+    adjustResponsiveStyles();
+    
+    // Listen for window resize
+    window.addEventListener('resize', adjustResponsiveStyles);
+});
 </script>
-{% endblock %} 
+{% endblock %}
