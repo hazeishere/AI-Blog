@@ -5,6 +5,8 @@ import os
 import markdown
 from datetime import datetime
 from dotenv import load_dotenv
+import time
+import random
 
 # Get the directory where the app.py file is located
 base_dir = os.path.dirname(os.path.abspath(__file__))

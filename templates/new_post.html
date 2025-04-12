@@ -2,32 +2,93 @@
 
 {% block title %}Create New Post - AI Tech Blog{% endblock %}
 
+{% block extra_head %}
+<style>
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(31, 26, 54, 0.8);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        color: white;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+    }
+    
+    .loading-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .spinner {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 20px;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: var(--primary);
+        animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .loader-message {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        text-align: center;
+        max-width: 80%;
+    }
+    
+    .loader-progress {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Create New Blog Post</h4>
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header py-3" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none;">
+                <h4 class="mb-0 text-white">Create New Blog Post</h4>
             </div>
-            <div class="card-body">
-                <form method="POST" action="{{ url_for('new_post') }}">
-                    <div class="mb-3">
-                        <label for="title" class="form-label">Blog Post Title</label>
-                        <input type="text" class="form-control" id="title" name="title" required
-                               placeholder="Enter an interesting technology topic...">
-                        <div class="form-text">
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('new_post') }}" id="post-form">
+                    <div class="mb-4">
+                        <label for="title" class="form-label fw-bold">Blog Post Title</label>
+                        <input type="text" class="form-control form-control-lg" id="title" name="title" required
+                               placeholder="Enter an interesting technology topic..." 
+                               style="border-radius: 8px; padding: 12px 15px;">
+                        <div class="form-text mt-2">
                             Enter a title about any technology topic, and AI will generate the content.
                         </div>
                     </div>
                     
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <strong>How it works:</strong> Our AI will generate a detailed blog post based on your title. 
-                        This may take a few seconds to complete.
+                    <div class="alert" style="background-color: rgba(106, 61, 232, 0.1); border-left: 4px solid var(--primary); border-radius: 0 8px 8px 0;">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="fas fa-robot" style="font-size: 1.8rem; color: var(--primary);"></i>
+                            </div>
+                            <div>
+                                <strong>How it works:</strong> Our AI will generate a detailed blog post based on your title. 
+                                This may take a few seconds to complete.
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg">
+                    <div class="d-grid gap-3 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg" id="generate-btn">
                             <i class="fas fa-robot me-2"></i>Generate Blog Post
                         </button>
                         <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Cancel</a>
@@ -36,27 +97,48 @@
             </div>
         </div>
         
-        <div class="mt-4">
-            <h5>Sample Title Ideas:</h5>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <a href="javascript:void(0)" class="sample-title">The Future of Quantum Computing</a>
-                </li>
-                <li class="list-group-item">
-                    <a href="javascript:void(0)" class="sample-title">How AI is Transforming Healthcare</a>
-                </li>
-                <li class="list-group-item">
-                    <a href="javascript:void(0)" class="sample-title">Web3 and the Evolution of the Internet</a>
-                </li>
-                <li class="list-group-item">
-                    <a href="javascript:void(0)" class="sample-title">Cybersecurity Trends for 2023</a>
-                </li>
-                <li class="list-group-item">
-                    <a href="javascript:void(0)" class="sample-title">Machine Learning in Autonomous Vehicles</a>
-                </li>
-            </ul>
+        <div class="card">
+            <div class="card-header py-3">
+                <h5 class="mb-0">Sample Title Ideas</h5>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item p-3">
+                        <a href="javascript:void(0)" class="sample-title text-decoration-none d-block">
+                            <i class="fas fa-lightbulb me-2 text-warning"></i>The Future of Quantum Computing
+                        </a>
+                    </li>
+                    <li class="list-group-item p-3">
+                        <a href="javascript:void(0)" class="sample-title text-decoration-none d-block">
+                            <i class="fas fa-heartbeat me-2 text-danger"></i>How AI is Transforming Healthcare
+                        </a>
+                    </li>
+                    <li class="list-group-item p-3">
+                        <a href="javascript:void(0)" class="sample-title text-decoration-none d-block">
+                            <i class="fas fa-globe me-2 text-success"></i>Web3 and the Evolution of the Internet
+                        </a>
+                    </li>
+                    <li class="list-group-item p-3">
+                        <a href="javascript:void(0)" class="sample-title text-decoration-none d-block">
+                            <i class="fas fa-shield-alt me-2 text-primary"></i>Cybersecurity Trends for 2023
+                        </a>
+                    </li>
+                    <li class="list-group-item p-3">
+                        <a href="javascript:void(0)" class="sample-title text-decoration-none d-block">
+                            <i class="fas fa-car me-2 text-secondary"></i>Machine Learning in Autonomous Vehicles
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
+</div>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loading-overlay">
+    <div class="spinner"></div>
+    <div class="loader-message">Generating your AI blog post...</div>
+    <div class="loader-progress">This may take up to 30 seconds</div>
 </div>
 {% endblock %}
 
@@ -66,11 +148,46 @@
     document.addEventListener('DOMContentLoaded', function() {
         const sampleTitles = document.querySelectorAll('.sample-title');
         const titleInput = document.getElementById('title');
+        const postForm = document.getElementById('post-form');
+        const loadingOverlay = document.getElementById('loading-overlay');
         
+        // Handle form submission
+        postForm.addEventListener('submit', function() {
+            if (titleInput.value.trim() !== '') {
+                loadingOverlay.classList.add('active');
+                
+                // Update progress message to keep user engaged
+                const progressMessages = [
+                    "Researching latest information...",
+                    "Analyzing key concepts...",
+                    "Crafting your article...",
+                    "Finalizing content..."
+                ];
+                
+                const loaderMessage = document.querySelector('.loader-message');
+                let currentMessage = 0;
+                
+                // Change message every few seconds
+                const messageInterval = setInterval(function() {
+                    if (currentMessage < progressMessages.length) {
+                        loaderMessage.textContent = progressMessages[currentMessage];
+                        currentMessage++;
+                    } else {
+                        clearInterval(messageInterval);
+                    }
+                }, 7000);
+            }
+        });
+        
+        // Sample title click handler
         sampleTitles.forEach(function(element) {
             element.addEventListener('click', function() {
-                titleInput.value = this.textContent;
+                titleInput.value = this.textContent.trim();
                 titleInput.focus();
+                
+                // Scroll to form
+                const form = document.querySelector('form');
+                form.scrollIntoView({ behavior: 'smooth' });
             });
         });
     });

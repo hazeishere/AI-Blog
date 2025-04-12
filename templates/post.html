@@ -12,9 +12,25 @@
         hyphens: auto;
     }
     
+    .post-header {
+        background: linear-gradient(135deg, rgba(106, 61, 232, 0.1), rgba(232, 77, 202, 0.1));
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .post-meta {
+        display: inline-block;
+        background-color: rgba(106, 61, 232, 0.1);
+        padding: 6px 12px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
     @media (max-width: 768px) {
         .post-content {
-            padding: 15px;
+            padding: 20px;
         }
         .post-content h1 {
             font-size: 1.8rem;
@@ -25,20 +41,20 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-10">
-        <nav aria-label="breadcrumb">
+    <div class="col-lg-10">
+        <nav aria-label="breadcrumb" class="mb-3">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-decoration-none">Home</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ post['title'] }}</li>
             </ol>
         </nav>
         
         <article class="post-content mb-5">
-            <header class="mb-4">
-                <h1>{{ post['title'] }}</h1>
-                <div class="text-muted">
-                    <i class="fas fa-calendar-alt me-2"></i>Published on {{ post['created_at'].split(' ')[0] }}
+            <header class="post-header">
+                <div class="post-meta">
+                    <i class="fas fa-calendar-alt me-2"></i>{{ post['created_at'].split(' ')[0] }}
                 </div>
+                <h1>{{ post['title'] }}</h1>
             </header>
             
             <div class="markdown-content">
@@ -46,7 +62,7 @@
             </div>
         </article>
         
-        <div class="d-flex justify-content-between mb-5">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mb-5">
             <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
                 <i class="fas fa-arrow-left me-2"></i>Back to Posts
             </a>
@@ -67,7 +83,7 @@
             // Add highlight.js if needed
             const highlightLink = document.createElement('link');
             highlightLink.rel = 'stylesheet';
-            highlightLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css';
+            highlightLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css';
             document.head.appendChild(highlightLink);
             
             const highlightScript = document.createElement('script');
