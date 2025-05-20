@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Create New Post - AI Tech Blog{% endblock %}
+{% block title %}Create New Post - The Fun AI Blog{% endblock %}
 
 {% block extra_head %}
 <style>
@@ -61,17 +61,17 @@
     <div class="col-lg-8">
         <div class="card mb-4">
             <div class="card-header py-3" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none;">
-                <h4 class="mb-0 text-white">Create New Blog Post</h4>
+                <h4 class="mb-0 text-white">Create a Supposedly Hilarious Post</h4>
             </div>
             <div class="card-body p-4">
                 <form method="POST" action="{{ url_for('new_post') }}" id="post-form">
                     <div class="mb-4">
-                        <label for="title" class="form-label fw-bold">Blog Post Title</label>
+                        <label for="title" class="form-label fw-bold">What Topic Should AI Write About?</label>
                         <input type="text" class="form-control form-control-lg" id="title" name="title" required
-                               placeholder="Enter an interesting technology topic..." 
+                               placeholder="Enter any topic and AI will create a funny title and post..." 
                                style="border-radius: 8px; padding: 12px 15px;">
                         <div class="form-text mt-2">
-                            Enter a title about any technology topic, and AI will generate the content.
+                            AI will come up with a witty title and write a humorous blog post about your topic.
                         </div>
                     </div>
                     
@@ -81,17 +81,17 @@
                                 <i class="fas fa-robot" style="font-size: 1.8rem; color: var(--primary);"></i>
                             </div>
                             <div>
-                                <strong>How it works:</strong> Our AI will generate a detailed blog post based on your title. 
-                                This may take a few seconds to complete.
+                                <strong>How it works:</strong> You provide the topic, and our AI will create both a catchy title and a 
+                                supposedly funny blog post. The quality of puns may vary significantly!
                             </div>
                         </div>
                     </div>
                     
                     <div class="d-grid gap-3 mt-4">
                         <button type="submit" class="btn btn-primary btn-lg" id="generate-btn">
-                            <i class="fas fa-robot me-2"></i>Generate Blog Post
+                            <i class="fas fa-robot me-2"></i>Generate Title & Content
                         </button>
-                        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Cancel</a>
+                        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Never Mind</a>
                     </div>
                 </form>
             </div>
@@ -99,33 +99,33 @@
         
         <div class="card">
             <div class="card-header py-3">
-                <h5 class="mb-0">Sample Title Ideas</h5>
+                <h5 class="mb-0">Need Topic Ideas? Try These</h5>
             </div>
             <div class="card-body p-0">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item p-3">
                         <a href="javascript:void(0)" class="sample-title text-decoration-none d-block">
-                            <i class="fas fa-lightbulb me-2 text-warning"></i>The Future of Quantum Computing
+                            <i class="fas fa-pizza-slice me-2 text-warning"></i>Pizza
                         </a>
                     </li>
                     <li class="list-group-item p-3">
                         <a href="javascript:void(0)" class="sample-title text-decoration-none d-block">
-                            <i class="fas fa-heartbeat me-2 text-danger"></i>How AI is Transforming Healthcare
+                            <i class="fas fa-cat me-2 text-danger"></i>Cats and their weird behaviors
                         </a>
                     </li>
                     <li class="list-group-item p-3">
                         <a href="javascript:void(0)" class="sample-title text-decoration-none d-block">
-                            <i class="fas fa-globe me-2 text-success"></i>Web3 and the Evolution of the Internet
+                            <i class="fas fa-couch me-2 text-success"></i>Procrastination
                         </a>
                     </li>
                     <li class="list-group-item p-3">
                         <a href="javascript:void(0)" class="sample-title text-decoration-none d-block">
-                            <i class="fas fa-shield-alt me-2 text-primary"></i>Cybersecurity Trends for 2023
+                            <i class="fas fa-coffee me-2 text-primary"></i>Coffee addiction
                         </a>
                     </li>
                     <li class="list-group-item p-3">
                         <a href="javascript:void(0)" class="sample-title text-decoration-none d-block">
-                            <i class="fas fa-car me-2 text-secondary"></i>Machine Learning in Autonomous Vehicles
+                            <i class="fas fa-robot me-2 text-secondary"></i>AI trying to understand memes
                         </a>
                     </li>
                 </ul>
@@ -137,8 +137,8 @@
 <!-- Loading overlay -->
 <div class="loading-overlay" id="loading-overlay">
     <div class="spinner"></div>
-    <div class="loader-message">Generating your AI blog post...</div>
-    <div class="loader-progress">This may take up to 30 seconds</div>
+    <div class="loader-message">AI crafting a punny title...</div>
+    <div class="loader-progress">And attempting to write something funny about your topic...</div>
 </div>
 {% endblock %}
 
@@ -158,10 +158,11 @@
                 
                 // Update progress message to keep user engaged
                 const progressMessages = [
-                    "Researching latest information...",
-                    "Analyzing key concepts...",
-                    "Crafting your article...",
-                    "Finalizing content..."
+                    "Brainstorming clever titles...",
+                    "Searching for the perfect pun...",
+                    "Now writing the actual content...",
+                    "Adding dad jokes and pop culture references...",
+                    "Checking if any of this is actually funny..."
                 ];
                 
                 const loaderMessage = document.querySelector('.loader-message');

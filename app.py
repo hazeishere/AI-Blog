@@ -7,6 +7,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 import time
 import random
+import re
 
 # Get the directory where the app.py file is located
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -59,24 +60,59 @@ def init_db():
 # Initialize the database on startup
 init_db()
 
-# AI content generation function
-def generate_content(title):
-    prompt = f"""Write a detailed technology blog post about "{title}".
-    Include the following:
-    - An engaging introduction that explains the importance of this topic
-    - Organized sections with proper headings (use Markdown formatting)
-    - Technical details and examples where appropriate
-    - Future implications and trends
-    - A conclusion summarizing key points
+# AI title generation function
+def generate_title(topic):
+    prompt = f"""Create a funny, witty title for a blog post about "{topic}".
+    The title should be humorous and catchy, with possibly a pun or play on words.
+    Just return the title itself, nothing else. Keep it under 10 words.
+    """
     
-    Format the entire post in proper Markdown with headings, bullet points, and code blocks as needed.
-    IMPORTANT: Ensure your response is complete and well-structured, with no sentences cut off midway, and word count should be between 1500 and 2500 words.
+    try:
+        # Using g4f to generate title
+        response = g4f.ChatCompletion.create(
+            model="gpt-4o",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=50  # Short response for just the title
+        )
+        
+        # Clean up any quotes or extra whitespace
+        title = response.strip().strip('"\'')
+        return title
+    except Exception as e:
+        print(f"Error generating title: {e}")
+        # Fall back to the original topic if title generation fails
+        return f"{topic}"
+
+# AI content generation function
+def generate_content(topic):
+    # First generate a funny title
+    title = generate_title(topic)
+    
+    prompt = f"""Write a fun, entertaining, and slightly irreverent blog post about "{topic}".
+    Use the title: "{title}"
+    
+    Include the following:
+    - A casual, humorous introduction that hooks the reader
+    - Relaxed and conversational tone throughout
+    - Pop culture references or analogies where appropriate
+    - Some witty observations or jokes related to the topic
+    - Personal anecdotes or hypothetical scenarios that readers can relate to
+    - Interesting facts presented in a fun way
+    - A lighthearted conclusion with a touch of humor
+    
+    Format the post in proper Markdown with headings, bullet points, and code blocks as needed.
+    Use a conversational style as if you're chatting with a friend over coffee.
+    
+    IMPORTANT: 
+    - DO NOT include the title "{title}" as an H1 heading at the beginning of your post - the title will be displayed separately.
+    - Start directly with your introduction paragraph.
+    - Keep it informative but entertaining, with a word count between 1000-2000 words.
     """
     
     try:
         # Using g4f to generate content
         response = g4f.ChatCompletion.create(
-            model="claude-3.7-sonnet",
+            model="gpt-4o",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=4000  # Ensure we get a complete response
         )
@@ -86,10 +122,10 @@ def generate_content(title):
             # If it seems like it might be cut off, add an ellipsis to indicate that
             response += "..."
             
-        return response
+        return title, response
     except Exception as e:
         print(f"Error generating content: {e}")
-        return None
+        return title, None
 
 # Routes
 @app.route('/')
@@ -122,6 +158,10 @@ def view_post(post_id):
                 'markdown.extensions.sane_lists'  # Better list handling
             ]
         )
+        
+        # Remove the first H1 heading (title) from the content to avoid duplication
+        content_html = re.sub(r'<h1>[^<]+</h1>', '', content_html, count=1)
+        
         return render_template('post.html', post=post, content_html=content_html)
     else:
         flash('Post not found')
@@ -130,13 +170,13 @@ def view_post(post_id):
 @app.route('/new', methods=['GET', 'POST'])
 def new_post():
     if request.method == 'POST':
-        title = request.form.get('title')
-        if not title:
-            flash('Title is required!')
+        topic = request.form.get('title')
+        if not topic:
+            flash('Topic is required!')
             return redirect(url_for('new_post'))
         
-        # Generate content using AI
-        content = generate_content(title)
+        # Generate title and content using AI
+        title, content = generate_content(topic)
         if not content:
             flash('Failed to generate content. Please try again.')
             return redirect(url_for('new_post'))
@@ -155,5 +195,24 @@ def new_post():
     
     return render_template('new_post.html')
 
+@app.route('/delete/<int:post_id>', methods=['POST'])
+def delete_post(post_id):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    
+    # Check if the post exists
+    cursor.execute("SELECT id FROM posts WHERE id = ?", (post_id,))
+    post = cursor.fetchone()
+    
+    if post:
+        cursor.execute("DELETE FROM posts WHERE id = ?", (post_id,))
+        conn.commit()
+        flash('Post deleted successfully!')
+    else:
+        flash('Post not found!')
+    
+    conn.close()
+    return redirect(url_for('index'))
+
 if __name__ == '__main__':
-    app.run(debug=os.getenv('DEBUG', 'False').lower() in ('true', '1', 't'), port=5001)
+    app.run(debug=os.getenv('DEBUG', 'False').lower() in ('true', '1', 't'), port=5002)
